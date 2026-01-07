@@ -1,0 +1,35 @@
+{
+    "Navbar": {
+        "home": "Home",
+        "candidates": "Candidates",
+        "policies": "Policies",
+        "contact": "Contact",
+        "join": "Join Us",
+        "campuses": {
+            "rangsit": "Rangsit",
+            "lampang": "Lampang",
+            "thaprachan": "Tha Prachan",
+            "pattaya": "Pattaya"
+        }
+    },
+    "HomePage": {
+        "heroTitle": "New Life, New Thammasat",
+        "heroSubtitle": "Relife Party for the Students, by the Students.",
+        "learnMore": "Learn More"
+    },
+    "CandidatesPage": {
+        "title": "Our Candidates",
+        "subtitle": "A diverse team ready to serve. Select your campus.",
+        "all": "All",
+        "notFound": "No candidates found."
+    },
+    "PolicyPage": {
+        "title": "Policies",
+        "readMore": "Read More",
+        "back": "Back to Policies"
+    },
+    "Common": {
+        "share": "Share",
+        "published": "Published"
+    }
+}
