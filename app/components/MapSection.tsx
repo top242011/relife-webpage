@@ -1,17 +1,74 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import InteractiveMap from "./InteractiveMap";
-import { candidatesByProvince } from "@/app/lib/cms-data";
+import { Candidate } from "@/app/lib/cms-data";
 import { MapPin, Users } from "lucide-react";
 import { Link } from "@/i18n/navigation";
+import { client } from "@/sanity/lib/client";
+import { CANDIDATES_QUERY } from "@/sanity/lib/queries";
+
+// Mapping from campus to province ID and province name
+const CAMPUS_TO_PROVINCE: Record<string, { provinceId: string; provinceName: string }> = {
+    "Tha Prachan": { provinceId: "TH-10", provinceName: "กรุงเทพมหานคร" },
+    "Rangsit": { provinceId: "TH-13", provinceName: "ปทุมธานี" },
+    "Lampang": { provinceId: "TH-52", provinceName: "ลำปาง" },
+};
 
 interface MapSectionProps {
     locale: string;
 }
 
+interface CandidatesByProvince {
+    [provinceId: string]: {
+        provinceName: string;
+        campus: string;
+        candidates: Candidate[];
+    };
+}
+
 export default function MapSection({ locale }: MapSectionProps) {
     const [selectedProvinceId, setSelectedProvinceId] = useState<string | null>(null);
+    const [candidatesByProvince, setCandidatesByProvince] = useState<CandidatesByProvince>({});
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchCandidates = async () => {
+            try {
+                const candidates: Candidate[] = await client.fetch(
+                    CANDIDATES_QUERY,
+                    { lang: locale },
+                    { cache: 'no-store' }
+                );
+
+                // Group candidates by campus and map to province
+                const grouped: CandidatesByProvince = {};
+
+                candidates.forEach((candidate) => {
+                    const campusMapping = CAMPUS_TO_PROVINCE[candidate.campus];
+                    if (campusMapping) {
+                        const { provinceId, provinceName } = campusMapping;
+                        if (!grouped[provinceId]) {
+                            grouped[provinceId] = {
+                                provinceName,
+                                campus: candidate.campus,
+                                candidates: [],
+                            };
+                        }
+                        grouped[provinceId].candidates.push(candidate);
+                    }
+                });
+
+                setCandidatesByProvince(grouped);
+            } catch (error) {
+                console.error("Failed to fetch candidates:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchCandidates();
+    }, [locale]);
 
     const selectedData = selectedProvinceId
         ? candidatesByProvince[selectedProvinceId]

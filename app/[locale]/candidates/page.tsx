@@ -31,8 +31,8 @@ export default function CandidatesPage() {
             setLoading(true);
             try {
                 const [candidatesData, siteContent] = await Promise.all([
-                    client.fetch(CANDIDATES_QUERY, { lang: locale }),
-                    client.fetch(SITE_CONTENT_QUERY, { lang: locale }),
+                    client.fetch(CANDIDATES_QUERY, { lang: locale }, { cache: 'no-store' }),
+                    client.fetch(SITE_CONTENT_QUERY, { lang: locale }, { cache: 'no-store' }),
                 ]);
                 setCandidates(candidatesData);
                 setContent(siteContent);
