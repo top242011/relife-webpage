@@ -1,6 +1,7 @@
 import { Link } from "@/i18n/navigation";
 import { ArrowRight } from "lucide-react";
 import Marquee from "@/app/components/Marquee";
+import MapSection from "@/app/components/MapSection";
 import { client } from "@/sanity/lib/client";
 import { SITE_CONTENT_QUERY } from "@/sanity/lib/queries";
 
@@ -73,6 +74,9 @@ export default async function Home({ params }: Props) {
       <div className="py-10 bg-slate-900 text-white transform -rotate-2 scale-105 origin-left">
         <Marquee items={marqueeKeywords} speed={30} />
       </div>
+
+      {/* Interactive Map Section */}
+      <MapSection locale={locale} />
 
       {/* Brief feature section to fill space */}
       <section className="py-24 bg-white">
