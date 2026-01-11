@@ -122,4 +122,11 @@ export default defineType({
             ]
         })
     ],
+    preview: {
+        select: {
+            title: 'name.th',
+            subtitle: 'position.th',
+            media: 'image',
+        },
+    },
 })
