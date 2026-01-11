@@ -2,6 +2,7 @@
     "Navbar": {
         "home": "Home",
         "candidates": "Candidates",
+        "progress": "Progress Tracking",
         "policies": "Policies",
         "contact": "Contact",
         "join": "Join Us",
@@ -31,5 +32,31 @@
     "Common": {
         "share": "Share",
         "published": "Published"
+    },
+    "ProgressPage": {
+        "title": "Progress Tracking",
+        "subtitle": "Monitor our policies and council performance.",
+        "policyTab": "Policy Progress",
+        "councilTab": "Council Performance",
+        "filter": {
+            "all": "All",
+            "central": "Central",
+            "center": "Center",
+            "Rangsit": "Rangsit",
+            "Lampang": "Lampang",
+            "Tha Prachan": "Tha Prachan"
+        },
+        "status": {
+            "notStarted": "Not Started",
+            "planning": "Planning",
+            "inProgress": "In Progress",
+            "reviewing": "Reviewing",
+            "completed": "Completed"
+        },
+        "attendance": "Attendance Rate",
+        "motions": "Recent Motions",
+        "debates": "Interesting Debates",
+        "votes": "Recent Votes",
+        "viewProfile": "View Profile"
     }
 }

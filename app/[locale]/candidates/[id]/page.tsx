@@ -3,7 +3,7 @@ import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { notFound } from "next/navigation";
 import { client } from "@/sanity/lib/client";
-import { CANDIDATE_BY_ID_QUERY } from "@/sanity/lib/queries";
+import { CANDIDATE_BY_ID_QUERY, MEMBER_STATS_QUERY } from "@/sanity/lib/queries";
 import { Candidate } from "@/app/lib/cms-data";
 import { ArrowLeft, Quote, GraduationCap, Trophy, Briefcase } from "lucide-react";
 import { urlFor } from "@/sanity/lib/image";
@@ -28,7 +28,10 @@ export async function generateMetadata({ params }: Props) {
 
 export default async function CandidateDetailPage({ params }: Props) {
     const { locale, id } = await params;
-    const candidate = await client.fetch<Candidate>(CANDIDATE_BY_ID_QUERY, { id, lang: locale });
+    const [candidate, stats] = await Promise.all([
+        client.fetch<Candidate>(CANDIDATE_BY_ID_QUERY, { id, lang: locale }),
+        client.fetch<any>(MEMBER_STATS_QUERY, { id })
+    ]);
 
     if (!candidate) notFound();
 
@@ -157,6 +160,68 @@ export default async function CandidateDetailPage({ params }: Props) {
                             </div>
                         )}
                     </div>
+
+                    {/* Parliamentary Performance */}
+                    {(stats?.meetings?.length > 0 || stats?.votes?.length > 0) && (
+                        <div>
+                            <h3 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
+                                <Trophy size={20} className="text-primary" />
+                                Parliamentary Performance
+                            </h3>
+
+                            {/* Attendance Score */}
+                            <div className="bg-slate-50 rounded-xl p-6 mb-8 border border-slate-100">
+                                <h4 className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-4">Attendance Record</h4>
+                                <div className="flex items-center gap-4">
+                                    <div className="text-4xl font-bold text-slate-900">
+                                        {(() => {
+                                            // Score = Total Meetings - Attended (Present) ? No, user said "Total - Entered = 0 if full".
+                                            // So it calculates "Missed" count?
+                                            // "Criteria is: Central + Center meetings THEN MINUS number of times entered. If entered full amount, value will be zero."
+                                            // So result is "Number of Absences/Leaves".
+                                            const total = stats.meetings.length;
+                                            const attended = stats.meetings.filter((m: any) => m.attendance === 'present').length;
+                                            const score = total - attended;
+                                            // Note: 'leave' implies entered? User said "meeting options: join, leave, absent".
+                                            // "minus number of times entered". Does "Leave" count as entered? Usually Leave is excusable absence.
+                                            // I will assume "Entered" = Present.
+                                            return score;
+                                        })()}
+                                    </div>
+                                    <div className="text-sm text-slate-500">
+                                        Missed Meetings / Absences
+                                        <br />
+                                        <span className="text-xs text-slate-400">(0 means perfect attendance)</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Voting History */}
+                            {stats.votes?.length > 0 && (
+                                <div>
+                                    <h4 className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-4">Voting History</h4>
+                                    <div className="space-y-3">
+                                        {stats.votes.map((meeting: any) => (
+                                            meeting.votes?.map((vote: any, idx: number) => (
+                                                <div key={`${meeting._id}-${idx}`} className="flex justify-between items-center bg-white border border-slate-100 p-4 rounded-lg shadow-sm">
+                                                    <div>
+                                                        <div className="font-medium text-slate-900">{vote.title}</div>
+                                                        <div className="text-xs text-slate-500 mt-1">{meeting.title} • {new Date(meeting.date).toLocaleDateString()}</div>
+                                                    </div>
+                                                    <span className={`px-3 py-1 rounded-full text-xs font-bold ${vote.myVote === 'approve' ? 'bg-green-100 text-green-700' :
+                                                            vote.myVote === 'disapprove' ? 'bg-red-100 text-red-700' :
+                                                                'bg-gray-100 text-gray-700'
+                                                        }`}>
+                                                        {vote.myVote}
+                                                    </span>
+                                                </div>
+                                            ))
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    )}
 
                     {/* Social Media Links */}
                     <div>

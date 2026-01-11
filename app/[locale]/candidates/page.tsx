@@ -6,7 +6,7 @@ import { client } from "@/sanity/lib/client";
 import { CANDIDATES_QUERY, SITE_CONTENT_QUERY } from "@/sanity/lib/queries";
 import { Candidate } from "@/app/lib/cms-data";
 import CandidateCard from "@/app/components/CandidateCard";
-import { Users, Crown } from "lucide-react";
+import { Users, Crown, ChevronDown, ChevronUp } from "lucide-react";
 import { useLocale } from "next-intl";
 
 interface SiteContent {
@@ -97,6 +97,57 @@ export default function CandidatesPage() {
         </motion.div>
     );
 
+
+    // Section Component with Inactive Toggle
+    const SectionWithInactive = ({ title, members }: { title: string, members: Candidate[] }) => {
+        const activeMembers = members.filter(m => m.isActive !== false);
+        const inactiveMembers = members.filter(m => m.isActive === false);
+        const [isExpanded, setIsExpanded] = useState(false);
+
+        if (members.length === 0) return null;
+
+        return (
+            <div>
+                <div className="flex items-center gap-3 mb-8">
+                    <h2 className="text-2xl font-bold text-slate-900">{title}</h2>
+                </div>
+
+                {/* Active Members */}
+                {activeMembers.length > 0 && (
+                    <CandidateGrid members={activeMembers} />
+                )}
+
+                {/* Inactive Members Collapsible */}
+                {inactiveMembers.length > 0 && (
+                    <div className="mt-8">
+                        <button
+                            onClick={() => setIsExpanded(!isExpanded)}
+                            className="flex items-center gap-2 text-slate-500 hover:text-primary transition-colors mb-6 w-full py-4 border-t border-gray-200"
+                        >
+                            <span className="font-medium text-sm">
+                                {locale === 'th' ? 'สมาชิกที่พ้นจากตำแหน่ง' : 'Former Members'} ({inactiveMembers.length})
+                            </span>
+                            {isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                        </button>
+
+                        <AnimatePresence>
+                            {isExpanded && (
+                                <motion.div
+                                    initial={{ height: 0, opacity: 0 }}
+                                    animate={{ height: "auto", opacity: 1 }}
+                                    exit={{ height: 0, opacity: 0 }}
+                                    className="overflow-hidden"
+                                >
+                                    <CandidateGrid members={inactiveMembers} />
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </div>
+                )}
+            </div>
+        );
+    };
+
     return (
         <div className="min-h-screen pb-20 bg-gray-50/50">
             {/* Filter */}
@@ -128,26 +179,10 @@ export default function CandidatesPage() {
                 ) : (
                     <div className="space-y-16">
                         {/* Executive Section */}
-                        {executiveMembers.length > 0 && (
-                            <div>
-                                <div className="flex items-center gap-3 mb-8">
-
-                                    <h2 className="text-2xl font-bold text-slate-900">{executiveTitle}</h2>
-                                </div>
-                                <CandidateGrid members={executiveMembers} />
-                            </div>
-                        )}
+                        <SectionWithInactive title={executiveTitle} members={executiveMembers} />
 
                         {/* Party List Section */}
-                        {partyListMembers.length > 0 && (
-                            <div>
-                                <div className="flex items-center gap-3 mb-8">
-
-                                    <h2 className="text-2xl font-bold text-slate-900">{partyListTitle}</h2>
-                                </div>
-                                <CandidateGrid members={partyListMembers} />
-                            </div>
-                        )}
+                        <SectionWithInactive title={partyListTitle} members={partyListMembers} />
 
                         {/* Empty State */}
                         {filteredCandidates.length === 0 && (

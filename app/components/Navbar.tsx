@@ -29,6 +29,8 @@ export default function Navbar() {
     const navLinks = [
         { label: t('home'), href: '/' },
         { label: t('policies'), href: '/policy' },
+        { label: t('candidates'), href: '/candidates' },
+        { label: t('progress'), href: '/progress' },
         {
             label: t('candidates'),
             href: '/candidates',

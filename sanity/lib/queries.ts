@@ -90,3 +90,82 @@ export const SITE_CONTENT_QUERY = defineQuery(`*[_type == "siteContent"][0]{
   "commonShare": commonShare[$lang],
   "commonPublished": commonPublished[$lang]
 }`);
+
+export const PROGRESS_PAGE_QUERY = defineQuery(`{
+  "policies": * [_type == "policy"]{
+  _id,
+  "title": title[$lang],
+  "slug": slug.current,
+  "category": category[$lang],
+  "summary": summary[$lang],
+  iconName,
+  progress,
+  policyType,
+  campus
+},
+  "meetings": * [_type == "meeting"] | order(date desc){
+  _id,
+  title,
+  date,
+  type,
+  campus,
+  attendees[]{
+    status,
+    member-> { _id, "name": name[$lang] }
+},
+  votes[]{
+  title,
+  results[]{
+    vote,
+    member-> { _id, "name": name[$lang], image }
+}
+    },
+motions[]{
+  title,
+    proposer -> { _id, "name": name[$lang] }
+}
+  },
+"debates": * [_type == "debate"] | order(date desc)[0...4]{
+  _id,
+    "title": title[$lang],
+      "slug": slug.current,
+        "summary": summary[$lang],
+          date,
+          coverImage
+}
+}`);
+
+export const DEBATE_BY_SLUG_QUERY = defineQuery(`*[_type == "debate" && slug.current == $slug][0]{
+  _id,
+  "title": title[$lang],
+  "date": date,
+  "content": content[$lang],
+  coverImage
+}`);
+
+export const MEMBER_STATS_QUERY = defineQuery(`{
+  "meetings": * [_type == "meeting" && references($id)]{
+  _id,
+  title,
+  date,
+  type,
+  "attendance": attendees[member._ref == $id][0].status
+},
+  "votes": * [_type == "meeting"]{
+  _id,
+  title,
+  date,
+  votes[]{
+    title,
+    "myVote": results[member._ref == $id][0].vote
+  }
+},
+  "motions": * [_type == "meeting"]{
+  _id,
+  title,
+  date,
+  motions[proposer._ref == $id]{
+    title
+  }
+}
+}`);
