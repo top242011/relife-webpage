@@ -6,7 +6,7 @@ import { client } from "@/sanity/lib/client";
 import { CANDIDATES_QUERY, SITE_CONTENT_QUERY } from "@/sanity/lib/queries";
 import { Candidate } from "@/app/lib/cms-data";
 import CandidateCard from "@/app/components/CandidateCard";
-import { Users } from "lucide-react";
+import { Users, Crown } from "lucide-react";
 import { useLocale } from "next-intl";
 
 interface SiteContent {
@@ -17,6 +17,8 @@ interface SiteContent {
     campusRangsit: string;
     campusLampang: string;
     campusThaPrachan: string;
+    executiveTitle: string;
+    partyListTitle: string;
 }
 
 export default function CandidatesPage() {
@@ -46,13 +48,14 @@ export default function CandidatesPage() {
     }, [locale]);
 
     // Fallback labels
-    const title = content?.candidatesTitle || (locale === 'th' ? 'ผู้สมัครของเรา' : 'Our Candidates');
-    const subtitle = content?.candidatesSubtitle || (locale === 'th' ? 'ทีมงานคุณภาพพร้อมรับใช้' : 'A diverse team ready to serve.');
+    const title = content?.candidatesTitle || (locale === 'th' ? 'สมาชิกสภาของเรา' : 'Our Council Members');
     const allLabel = content?.candidatesAll || (locale === 'th' ? 'ทั้งหมด' : 'All');
-    const notFoundLabel = content?.candidatesNotFound || (locale === 'th' ? 'ไม่พบข้อมูล' : 'No candidates found.');
+    const notFoundLabel = content?.candidatesNotFound || (locale === 'th' ? 'ไม่พบข้อมูล' : 'No members found.');
     const campusRangsit = content?.campusRangsit || (locale === 'th' ? 'รังสิต' : 'Rangsit');
     const campusLampang = content?.campusLampang || (locale === 'th' ? 'ลำปาง' : 'Lampang');
     const campusThaPrachan = content?.campusThaPrachan || (locale === 'th' ? 'ท่าพระจันทร์' : 'Tha Prachan');
+    const executiveTitle = content?.executiveTitle || (locale === 'th' ? 'คณะกรรมการบริหาร' : 'Executive Committee');
+    const partyListTitle = content?.partyListTitle || (locale === 'th' ? 'สมาชิกสภาแบบบัญชีรายชื่อ' : 'Party List Members');
 
     const CAMPUSES = [
         { id: "All", label: allLabel },
@@ -61,31 +64,43 @@ export default function CandidatesPage() {
         { id: "Tha Prachan", label: campusThaPrachan },
     ];
 
+    // Filter by campus
     const filteredCandidates =
         selectedCampus === "All"
             ? candidates
             : candidates.filter((c) => c.campus === selectedCampus);
 
+    // Split by category
+    const executiveMembers = filteredCandidates.filter((c) => c.memberCategory === 'executive');
+    const partyListMembers = filteredCandidates.filter((c) => c.memberCategory === 'partyList' || !c.memberCategory);
+
+    // Grid component for candidates
+    const CandidateGrid = ({ members }: { members: Candidate[] }) => (
+        <motion.div
+            layout
+            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+        >
+            <AnimatePresence mode="popLayout">
+                {members.map((candidate) => (
+                    <motion.div
+                        key={candidate._id || candidate.id}
+                        layout
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        transition={{ duration: 0.3 }}
+                    >
+                        <CandidateCard candidate={candidate} />
+                    </motion.div>
+                ))}
+            </AnimatePresence>
+        </motion.div>
+    );
+
     return (
         <div className="min-h-screen pb-20 bg-gray-50/50">
-            {/* Hero */}
-            <section className="bg-white pt-24 pb-12 border-b border-gray-100">
-                <div className="container mx-auto px-4 text-center">
-                    <div className="inline-flex items-center gap-2 text-primary font-bold mb-4 bg-primary/5 px-4 py-1.5 rounded-full">
-                        <Users size={16} />
-                        <span>Meet Our Team</span>
-                    </div>
-                    <h1 className="text-4xl md:text-6xl font-bold mb-4 tracking-tighter text-slate-900">
-                        {title}
-                    </h1>
-                    <p className="text-lg text-slate-500 max-w-2xl mx-auto">
-                        {subtitle}
-                    </p>
-                </div>
-            </section>
-
             {/* Filter */}
-            <section className="py-8 sticky top-[72px] z-40 bg-gray-50/95 backdrop-blur-sm border-b border-gray-200">
+            <section className="py-3 sticky top-[64px] z-40 bg-white border-b border-gray-200">
                 <div className="container mx-auto px-4 flex justify-center">
                     <div className="inline-flex bg-white p-1 rounded-full border border-gray-200 shadow-sm overflow-x-auto max-w-full">
                         {CAMPUSES.map((campus) => (
@@ -104,40 +119,46 @@ export default function CandidatesPage() {
                 </div>
             </section>
 
-            {/* Grid */}
+            {/* Content */}
             <section className="container mx-auto px-4 py-12">
                 {loading ? (
                     <div className="flex justify-center py-20">
                         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
                     </div>
                 ) : (
-                    <motion.div
-                        layout
-                        className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
-                    >
-                        <AnimatePresence mode="popLayout">
-                            {filteredCandidates.map((candidate) => (
-                                <motion.div
-                                    key={candidate._id || candidate.id}
-                                    layout
-                                    initial={{ opacity: 0, scale: 0.8 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    exit={{ opacity: 0, scale: 0.8 }}
-                                    transition={{ duration: 0.3 }}
-                                >
-                                    <CandidateCard candidate={candidate} />
-                                </motion.div>
-                            ))}
-                        </AnimatePresence>
-                    </motion.div>
-                )}
+                    <div className="space-y-16">
+                        {/* Executive Section */}
+                        {executiveMembers.length > 0 && (
+                            <div>
+                                <div className="flex items-center gap-3 mb-8">
 
-                {!loading && filteredCandidates.length === 0 && (
-                    <div className="text-center py-20 text-gray-400">
-                        <p>{notFoundLabel}</p>
+                                    <h2 className="text-2xl font-bold text-slate-900">{executiveTitle}</h2>
+                                </div>
+                                <CandidateGrid members={executiveMembers} />
+                            </div>
+                        )}
+
+                        {/* Party List Section */}
+                        {partyListMembers.length > 0 && (
+                            <div>
+                                <div className="flex items-center gap-3 mb-8">
+
+                                    <h2 className="text-2xl font-bold text-slate-900">{partyListTitle}</h2>
+                                </div>
+                                <CandidateGrid members={partyListMembers} />
+                            </div>
+                        )}
+
+                        {/* Empty State */}
+                        {filteredCandidates.length === 0 && (
+                            <div className="text-center py-20 text-gray-400">
+                                <p>{notFoundLabel}</p>
+                            </div>
+                        )}
                     </div>
                 )}
             </section>
         </div>
     );
 }
+

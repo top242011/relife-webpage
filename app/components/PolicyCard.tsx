@@ -67,17 +67,11 @@ export default function PolicyCard({ policy }: PolicyCardProps) {
                         {policy.category}
                     </p>
 
-                    <motion.div
-                        variants={{
-                            rest: { height: 0, opacity: 0, marginTop: 0 },
-                            hover: { height: "auto", opacity: 1, marginTop: 16 },
-                        }}
-                        className="overflow-hidden"
-                    >
-                        <p className="text-gray-100 text-sm leading-relaxed">
+                    <div className="mt-4">
+                        <p className="text-slate-600 text-sm leading-relaxed group-hover:text-gray-100 transition-colors">
                             {policy.summary}
                         </p>
-                    </motion.div>
+                    </div>
                 </div>
             </motion.div>
         </Link>

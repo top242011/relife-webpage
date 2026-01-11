@@ -143,6 +143,18 @@ export const siteContent = defineType({
             type: 'localeString',
             group: 'candidates',
         }),
+        defineField({
+            name: 'executiveTitle',
+            title: 'Executive Section Title',
+            type: 'localeString',
+            group: 'candidates',
+        }),
+        defineField({
+            name: 'partyListTitle',
+            title: 'Party List Section Title',
+            type: 'localeString',
+            group: 'candidates',
+        }),
 
         // ===== POLICIES PAGE =====
         defineField({

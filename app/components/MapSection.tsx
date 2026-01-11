@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import InteractiveMap from "./InteractiveMap";
 import { Candidate } from "@/app/lib/cms-data";
 import { MapPin, Users } from "lucide-react";
@@ -31,6 +31,18 @@ export default function MapSection({ locale }: MapSectionProps) {
     const [selectedProvinceId, setSelectedProvinceId] = useState<string | null>(null);
     const [candidatesByProvince, setCandidatesByProvince] = useState<CandidatesByProvince>({});
     const [loading, setLoading] = useState(true);
+    const infoPanelRef = useRef<HTMLDivElement>(null);
+
+    // Handle province selection with scroll on mobile
+    const handleProvinceSelect = (provinceId: string) => {
+        setSelectedProvinceId(provinceId);
+        // Scroll to info panel on mobile
+        if (window.innerWidth < 768 && infoPanelRef.current) {
+            setTimeout(() => {
+                infoPanelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        }
+    };
 
     useEffect(() => {
         const fetchCandidates = async () => {
@@ -100,13 +112,13 @@ export default function MapSection({ locale }: MapSectionProps) {
                     {/* Map */}
                     <div className="order-2 md:order-1">
                         <InteractiveMap
-                            onProvinceSelect={setSelectedProvinceId}
+                            onProvinceSelect={handleProvinceSelect}
                             selectedProvinceId={selectedProvinceId}
                         />
                     </div>
 
                     {/* Info Panel */}
-                    <div className="order-1 md:order-2 md:sticky md:top-24">
+                    <div ref={infoPanelRef} className="order-1 md:order-2 md:sticky md:top-24">
                         {selectedData ? (
                             <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 animate-fadeIn">
                                 <div className="flex items-center gap-3 mb-6">
@@ -127,17 +139,21 @@ export default function MapSection({ locale }: MapSectionProps) {
                                         }
                                     </p>
 
-                                    <div className="space-y-3">
-                                        {selectedData.candidates.slice(0, 3).map((candidate) => (
-                                            <div key={candidate.id} className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
-                                                <div className="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center font-bold">
+                                    <div className="space-y-3 max-h-[240px] overflow-y-auto pr-2">
+                                        {selectedData.candidates.map((candidate) => (
+                                            <Link
+                                                key={candidate.id || candidate._id}
+                                                href={`/candidates/${candidate._id || candidate.id}`}
+                                                className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"
+                                            >
+                                                <div className="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center font-bold shrink-0">
                                                     {candidate.number}
                                                 </div>
-                                                <div>
-                                                    <p className="font-medium text-slate-900">{candidate.name}</p>
-                                                    <p className="text-sm text-slate-500">{candidate.position}</p>
+                                                <div className="min-w-0">
+                                                    <p className="font-medium text-slate-900 hover:text-primary transition-colors">{candidate.name}</p>
+                                                    <p className="text-sm text-slate-500 truncate">{candidate.position}</p>
                                                 </div>
-                                            </div>
+                                            </Link>
                                         ))}
                                     </div>
 

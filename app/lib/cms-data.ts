@@ -136,11 +136,22 @@ export interface Candidate {
   name: string;
   number: number;
   campus: string;
+  campusLabel?: string;
+  memberCategory?: 'executive' | 'partyList';
+  isActive?: boolean;
   image: any;
   bio?: string;
   education?: string[];
   vision?: string;
   position: string;
+  workExperience?: string[];
+  achievements?: string[];
+  socialLinks?: {
+    facebook?: string;
+    instagram?: string;
+    twitter?: string;
+    tiktok?: string;
+  };
 }
 
 export const candidatesByProvince: Record<string, { provinceName: string, campus: string, candidates: Candidate[] }> = {

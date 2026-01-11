@@ -25,6 +25,9 @@ export const CANDIDATES_QUERY = defineQuery(`*[_type == "candidate"] | order(num
   "name": name[$lang],
   number,
   campus,
+  "campusLabel": campusLabel[$lang],
+  memberCategory,
+  isActive,
   "position": position[$lang],
   image,
   "bio": bio[$lang],
@@ -41,7 +44,10 @@ export const CANDIDATE_BY_ID_QUERY = defineQuery(`*[_type == "candidate" && _id 
   image,
   "bio": bio[$lang],
   "vision": vision[$lang],
-  education
+  education,
+  workExperience,
+  achievements,
+  socialLinks
 }`);
 
 export const SITE_CONTENT_QUERY = defineQuery(`*[_type == "siteContent"][0]{
@@ -71,6 +77,8 @@ export const SITE_CONTENT_QUERY = defineQuery(`*[_type == "siteContent"][0]{
   "candidatesSubtitle": candidatesSubtitle[$lang],
   "candidatesAll": candidatesAll[$lang],
   "candidatesNotFound": candidatesNotFound[$lang],
+  "executiveTitle": executiveTitle[$lang],
+  "partyListTitle": partyListTitle[$lang],
   
   // PoliciesPage
   "policiesTitle": policiesTitle[$lang],

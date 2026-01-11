@@ -11,7 +11,7 @@ interface MarqueeProps {
 
 export default function Marquee({ items, direction = "left", speed = 20 }: MarqueeProps) {
     return (
-        <div className="relative flex overflow-hidden py-10 bg-gray-50 border-y border-gray-100">
+        <div className="relative flex overflow-x-hidden overflow-y-visible py-10 bg-gray-50 border-y border-gray-100">
             <div className="flex gap-16 whitespace-nowrap">
                 <motion.div
                     className="flex gap-16 min-w-full"

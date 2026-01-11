@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { client } from "@/sanity/lib/client";
 import { CANDIDATE_BY_ID_QUERY } from "@/sanity/lib/queries";
 import { Candidate } from "@/app/lib/cms-data";
-import { ArrowLeft, Quote, GraduationCap, Trophy } from "lucide-react";
+import { ArrowLeft, Quote, GraduationCap, Trophy, Briefcase } from "lucide-react";
 import { urlFor } from "@/sanity/lib/image";
 
 type Props = {
@@ -40,7 +40,7 @@ export default async function CandidateDetailPage({ params }: Props) {
     return (
         <div className="min-h-screen bg-white md:flex">
             {/* Left Column: Image */}
-            <div className="w-full md:w-1/2 lg:w-5/12 h-[50vh] md:h-screen sticky top-0 bg-gray-100">
+            <div className="relative w-full md:w-1/2 lg:w-5/12 h-[50vh] md:h-screen md:sticky md:top-0 bg-gray-100">
                 <Image
                     src={imgSrc}
                     alt={candidate.name}
@@ -60,7 +60,7 @@ export default async function CandidateDetailPage({ params }: Props) {
             </div>
 
             {/* Right Column: Content */}
-            <div className="w-full md:w-1/2 lg:w-7/12 px-6 py-12 md:p-16 lg:p-24 overflow-y-auto">
+            <div className="relative z-10 w-full md:w-1/2 lg:w-7/12 px-6 py-12 md:p-16 lg:p-24 overflow-y-auto bg-white">
                 <div className="flex items-start justify-between mb-8">
                     <div>
                         <span className="text-secondary-foreground font-semibold uppercase tracking-wider text-sm text-gray-400 mb-2 block">
@@ -112,6 +112,126 @@ export default async function CandidateDetailPage({ params }: Props) {
                                 </li>
                             ))}
                         </ul>
+                    </div>
+
+                    {/* Work Experience */}
+                    <div>
+                        <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+                            <Briefcase size={20} className="text-primary" />
+                            Work Experience
+                        </h3>
+                        {candidate.workExperience && candidate.workExperience.length > 0 ? (
+                            <ul className="space-y-4">
+                                {candidate.workExperience.map((work, idx) => (
+                                    <li key={idx} className="flex gap-4 items-center bg-gray-50 p-4 rounded-lg">
+                                        <div className="w-2 h-2 rounded-full bg-primary shrink-0" />
+                                        <span className="text-slate-700 font-medium">{work}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <div className="bg-gray-50 p-4 rounded-lg">
+                                <span className="text-gray-400">-</span>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Achievements */}
+                    <div>
+                        <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+                            <Trophy size={20} className="text-primary" />
+                            Achievements
+                        </h3>
+                        {candidate.achievements && candidate.achievements.length > 0 ? (
+                            <ul className="space-y-4">
+                                {candidate.achievements.map((achievement, idx) => (
+                                    <li key={idx} className="flex gap-4 items-center bg-gray-50 p-4 rounded-lg">
+                                        <div className="w-2 h-2 rounded-full bg-accent shrink-0" />
+                                        <span className="text-slate-700 font-medium">{achievement}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <div className="bg-gray-50 p-4 rounded-lg">
+                                <span className="text-gray-400">-</span>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Social Media Links */}
+                    <div>
+                        <h3 className="text-lg font-bold text-slate-900 mb-4">
+                            Social Media
+                        </h3>
+                        <div className="grid grid-cols-2 gap-4">
+                            {/* Facebook */}
+                            <div className="flex items-center gap-3 bg-gray-50 p-4 rounded-lg">
+                                <span className="text-2xl">📘</span>
+                                {candidate.socialLinks?.facebook ? (
+                                    <a
+                                        href={candidate.socialLinks.facebook}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-primary hover:underline font-medium"
+                                    >
+                                        Facebook
+                                    </a>
+                                ) : (
+                                    <span className="text-gray-400">-</span>
+                                )}
+                            </div>
+
+                            {/* Instagram */}
+                            <div className="flex items-center gap-3 bg-gray-50 p-4 rounded-lg">
+                                <span className="text-2xl">📷</span>
+                                {candidate.socialLinks?.instagram ? (
+                                    <a
+                                        href={candidate.socialLinks.instagram}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-primary hover:underline font-medium"
+                                    >
+                                        Instagram
+                                    </a>
+                                ) : (
+                                    <span className="text-gray-400">-</span>
+                                )}
+                            </div>
+
+                            {/* Twitter/X */}
+                            <div className="flex items-center gap-3 bg-gray-50 p-4 rounded-lg">
+                                <span className="text-2xl">🐦</span>
+                                {candidate.socialLinks?.twitter ? (
+                                    <a
+                                        href={candidate.socialLinks.twitter}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-primary hover:underline font-medium"
+                                    >
+                                        Twitter
+                                    </a>
+                                ) : (
+                                    <span className="text-gray-400">-</span>
+                                )}
+                            </div>
+
+                            {/* TikTok */}
+                            <div className="flex items-center gap-3 bg-gray-50 p-4 rounded-lg">
+                                <span className="text-2xl">🎵</span>
+                                {candidate.socialLinks?.tiktok ? (
+                                    <a
+                                        href={candidate.socialLinks.tiktok}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-primary hover:underline font-medium"
+                                    >
+                                        TikTok
+                                    </a>
+                                ) : (
+                                    <span className="text-gray-400">-</span>
+                                )}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
