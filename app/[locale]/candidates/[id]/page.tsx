@@ -7,6 +7,7 @@ import { CANDIDATE_BY_ID_QUERY, MEMBER_STATS_QUERY } from "@/sanity/lib/queries"
 import { Candidate } from "@/app/lib/cms-data";
 import { ArrowLeft, Quote, GraduationCap, Trophy, Briefcase } from "lucide-react";
 import { urlFor } from "@/sanity/lib/image";
+import { getTranslations } from "next-intl/server";
 
 type Props = {
     params: Promise<{ locale: string; id: string }>;
@@ -28,6 +29,8 @@ export async function generateMetadata({ params }: Props) {
 
 export default async function CandidateDetailPage({ params }: Props) {
     const { locale, id } = await params;
+    const t = await getTranslations({ locale, namespace: 'CandidateDetail' });
+
     const [candidate, stats] = await Promise.all([
         client.fetch<Candidate>(CANDIDATE_BY_ID_QUERY, { id, lang: locale }),
         client.fetch<any>(MEMBER_STATS_QUERY, { id })
@@ -38,6 +41,29 @@ export default async function CandidateDetailPage({ params }: Props) {
     const imgSrc = candidate.image?.asset
         ? urlFor(candidate.image).url()
         : (typeof candidate.image === 'string' ? candidate.image : '/candidate-1.png');
+
+    // Helper to translate vote status safely
+    const getVoteLabel = (voteType: string) => {
+        const key = `vote.${voteType}`;
+        // next-intl might throw or return key if missing, so just try to use it
+        // Check if key exists in t.raw('vote')? Or just rely on convention.
+        // Simple way:
+        if (voteType === 'approve') return t('vote.approve');
+        if (voteType === 'disapprove') return t('vote.disapprove');
+        if (voteType === 'abstain') return t('vote.abstain');
+        if (voteType === 'no_vote') return t('vote.no_vote');
+        return voteType;
+    };
+
+    // Helper for campus
+    const getCampusLabel = (campus: string) => {
+        // Assume campus is uppercase "LAMPANG", "RANGSIT", etc.
+        // Map to translation keys
+        if (campus === 'LAMPANG') return t('campus.LAMPANG');
+        if (campus === 'RANGSIT') return t('campus.RANGSIT');
+        if (campus === 'THA PRACHAN') return t('campus.THA PRACHAN');
+        return campus;
+    }
 
 
     return (
@@ -67,7 +93,7 @@ export default async function CandidateDetailPage({ params }: Props) {
                 <div className="flex items-start justify-between mb-8">
                     <div>
                         <span className="text-secondary-foreground font-semibold uppercase tracking-wider text-sm text-gray-400 mb-2 block">
-                            {candidate.campus}
+                            {getCampusLabel(candidate.campus)}
                         </span>
                         <h1 className="text-4xl md:text-6xl font-bold text-slate-900 leading-tight">
                             {candidate.name}
@@ -94,7 +120,7 @@ export default async function CandidateDetailPage({ params }: Props) {
                     {/* Bio */}
                     <div>
                         <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
-                            About Me
+                            {t('aboutMe')}
                         </h3>
                         <p className="text-slate-600 leading-relaxed text-lg">
                             {candidate.bio}
@@ -105,7 +131,7 @@ export default async function CandidateDetailPage({ params }: Props) {
                     <div>
                         <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
                             <GraduationCap size={20} className="text-primary" />
-                            Education
+                            {t('education')}
                         </h3>
                         <ul className="space-y-4">
                             {candidate.education?.map((edu, idx) => (
@@ -121,7 +147,7 @@ export default async function CandidateDetailPage({ params }: Props) {
                     <div>
                         <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
                             <Briefcase size={20} className="text-primary" />
-                            Work Experience
+                            {t('workExperience')}
                         </h3>
                         {candidate.workExperience && candidate.workExperience.length > 0 ? (
                             <ul className="space-y-4">
@@ -143,7 +169,7 @@ export default async function CandidateDetailPage({ params }: Props) {
                     <div>
                         <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
                             <Trophy size={20} className="text-primary" />
-                            Achievements
+                            {t('achievements')}
                         </h3>
                         {candidate.achievements && candidate.achievements.length > 0 ? (
                             <ul className="space-y-4">
@@ -166,32 +192,25 @@ export default async function CandidateDetailPage({ params }: Props) {
                         <div>
                             <h3 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
                                 <Trophy size={20} className="text-primary" />
-                                Parliamentary Performance
+                                {t('parliamentaryPerformance')}
                             </h3>
 
                             {/* Attendance Score */}
                             <div className="bg-slate-50 rounded-xl p-6 mb-8 border border-slate-100">
-                                <h4 className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-4">Attendance Record</h4>
+                                <h4 className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-4">{t('attendanceRecord')}</h4>
                                 <div className="flex items-center gap-4">
                                     <div className="text-4xl font-bold text-slate-900">
                                         {(() => {
-                                            // Score = Total Meetings - Attended (Present) ? No, user said "Total - Entered = 0 if full".
-                                            // So it calculates "Missed" count?
-                                            // "Criteria is: Central + Center meetings THEN MINUS number of times entered. If entered full amount, value will be zero."
-                                            // So result is "Number of Absences/Leaves".
                                             const total = stats.meetings.length;
                                             const attended = stats.meetings.filter((m: any) => m.attendance === 'present').length;
                                             const score = total - attended;
-                                            // Note: 'leave' implies entered? User said "meeting options: join, leave, absent".
-                                            // "minus number of times entered". Does "Leave" count as entered? Usually Leave is excusable absence.
-                                            // I will assume "Entered" = Present.
                                             return score;
                                         })()}
                                     </div>
                                     <div className="text-sm text-slate-500">
-                                        Missed Meetings / Absences
+                                        {t('missedMeetings')}
                                         <br />
-                                        <span className="text-xs text-slate-400">(0 means perfect attendance)</span>
+                                        <span className="text-xs text-slate-400">{t('perfectAttendance')}</span>
                                     </div>
                                 </div>
                             </div>
@@ -199,7 +218,7 @@ export default async function CandidateDetailPage({ params }: Props) {
                             {/* Voting History */}
                             {stats.votes?.length > 0 && (
                                 <div>
-                                    <h4 className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-4">Voting History</h4>
+                                    <h4 className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-4">{t('votingHistory')}</h4>
                                     <div className="space-y-3">
                                         {stats.votes.map((meeting: any) => (
                                             meeting.votes?.map((vote: any, idx: number) => (
@@ -209,10 +228,10 @@ export default async function CandidateDetailPage({ params }: Props) {
                                                         <div className="text-xs text-slate-500 mt-1">{meeting.title} • {new Date(meeting.date).toLocaleDateString()}</div>
                                                     </div>
                                                     <span className={`px-3 py-1 rounded-full text-xs font-bold ${vote.myVote === 'approve' ? 'bg-green-100 text-green-700' :
-                                                            vote.myVote === 'disapprove' ? 'bg-red-100 text-red-700' :
-                                                                'bg-gray-100 text-gray-700'
+                                                        vote.myVote === 'disapprove' ? 'bg-red-100 text-red-700' :
+                                                            'bg-gray-100 text-gray-700'
                                                         }`}>
-                                                        {vote.myVote}
+                                                        {getVoteLabel(vote.myVote)}
                                                     </span>
                                                 </div>
                                             ))
@@ -226,7 +245,7 @@ export default async function CandidateDetailPage({ params }: Props) {
                     {/* Social Media Links */}
                     <div>
                         <h3 className="text-lg font-bold text-slate-900 mb-4">
-                            Social Media
+                            {t('socialMedia')}
                         </h3>
                         <div className="grid grid-cols-2 gap-4">
                             {/* Facebook */}

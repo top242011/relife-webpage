@@ -57,6 +57,55 @@
         "motions": "Recent Motions",
         "debates": "Interesting Debates",
         "votes": "Recent Votes",
-        "viewProfile": "View Profile"
+        "viewProfile": "View Profile",
+        "progressSimple": "Progress",
+        "proposedBy": "Proposed by",
+        "attendanceSimple": "Attendance",
+        "present": "Present",
+        "leave": "Leave",
+        "absent": "Absent",
+        "topic": "Topic",
+        "meeting": "Meeting",
+        "date": "Date",
+        "action": "Action",
+        "noMotions": "No recent motions"
+    },
+    "CandidateDetail": {
+        "aboutMe": "About Me",
+        "education": "Education",
+        "workExperience": "Work Experience",
+        "achievements": "Achievements",
+        "parliamentaryPerformance": "Parliamentary Performance",
+        "attendanceRecord": "Attendance Record",
+        "missedMeetings": "Missed Meetings / Absences",
+        "perfectAttendance": "(0 means perfect attendance)",
+        "votingHistory": "Voting History",
+        "socialMedia": "Social Media",
+        "campus": {
+            "LAMPANG": "Lampang",
+            "RANGSIT": "Rangsit",
+            "THA PRACHAN": "Tha Prachan"
+        },
+        "vote": {
+            "approve": "Approve",
+            "disapprove": "Disapprove",
+            "abstain": "Abstain",
+            "no_vote": "No Vote"
+        }
+    },
+    "VoteDetail": {
+        "title": "Vote Details",
+        "attendees": "Meeting Attendees",
+        "presentMembers": "Present",
+        "leaveMembers": "On Leave",
+        "absentMembers": "Absent",
+        "voteResults": "Individual Vote Results",
+        "approve": "Approve",
+        "disapprove": "Disapprove",
+        "abstain": "Abstain",
+        "noVote": "No Vote",
+        "otherParties": "Other Parties",
+        "close": "Close",
+        "voteSummary": "Vote Summary"
     }
 }

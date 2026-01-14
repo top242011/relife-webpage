@@ -29,7 +29,6 @@ export default function Navbar() {
     const navLinks = [
         { label: t('home'), href: '/' },
         { label: t('policies'), href: '/policy' },
-        { label: t('candidates'), href: '/candidates' },
         { label: t('progress'), href: '/progress' },
         {
             label: t('candidates'),
@@ -99,9 +98,14 @@ export default function Navbar() {
 
                     <LanguageSwitcher />
 
-                    <button className="bg-primary text-white px-5 py-2 rounded-full text-sm font-semibold hover:bg-blue-800 transition-colors">
+                    <a
+                        href="https://docs.google.com/forms/d/e/1FAIpQLSfHUCqKNBki9Aoy2p385GfNSFHmitIjWF3g_lyqIp3qtGKQ_g/viewform"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="bg-primary text-white px-5 py-2 rounded-full text-sm font-semibold hover:bg-blue-800 transition-colors"
+                    >
                         {t('join')}
-                    </button>
+                    </a>
                 </div>
 
                 {/* Mobile Toggle */}
@@ -151,9 +155,14 @@ export default function Navbar() {
                             <div className="py-2">
                                 <LanguageSwitcher />
                             </div>
-                            <button className="bg-primary text-white w-full py-3 rounded-lg font-semibold mt-4">
+                            <a
+                                href="https://docs.google.com/forms/d/e/1FAIpQLSfHUCqKNBki9Aoy2p385GfNSFHmitIjWF3g_lyqIp3qtGKQ_g/viewform"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="bg-primary text-white w-full py-3 rounded-lg font-semibold mt-4 block text-center"
+                            >
                                 {t('join')}
-                            </button>
+                            </a>
                         </div>
                     </motion.div>
                 )}

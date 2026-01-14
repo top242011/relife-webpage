@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { CheckCircle, Clock, FileText, User, ChevronRight, BarChart3 } from "lucide-react";
 import { Link } from "@/i18n/navigation";
+import VoteDetailModal from "./VoteDetailModal";
 
 // --- Types ---
 type Policy = {
@@ -50,21 +51,21 @@ type Props = {
 
 // --- Components ---
 
-const ProgressBar = ({ progress }: { progress: number }) => {
+const ProgressBar = ({ progress, label }: { progress: number, label: string }) => {
     let color = "bg-gray-300";
-    let label = "0%";
+    let percentageLabel = "0%";
 
-    if (progress >= 100) { color = "bg-green-500"; label = "100%"; }
-    else if (progress >= 75) { color = "bg-blue-500"; label = "75%"; }
-    else if (progress >= 50) { color = "bg-yellow-500"; label = "50%"; }
-    else if (progress >= 25) { color = "bg-orange-400"; label = "25%"; }
-    else { color = "bg-slate-300"; label = "0%"; }
+    if (progress >= 100) { color = "bg-green-500"; percentageLabel = "100%"; }
+    else if (progress >= 75) { color = "bg-blue-500"; percentageLabel = "75%"; }
+    else if (progress >= 50) { color = "bg-yellow-500"; percentageLabel = "50%"; }
+    else if (progress >= 25) { color = "bg-orange-400"; percentageLabel = "25%"; }
+    else { color = "bg-slate-300"; percentageLabel = "0%"; }
 
     return (
         <div className="w-full">
             <div className="flex justify-between text-xs mb-1 font-medium text-slate-500">
-                <span>Progress</span>
                 <span>{label}</span>
+                <span>{percentageLabel}</span>
             </div>
             <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
                 <motion.div
@@ -111,13 +112,13 @@ const AttendancePieChart = ({ meetings, t }: { meetings: Meeting[], t: any }) =>
             >
                 <div className="absolute inset-0 m-auto w-32 h-32 bg-white rounded-full flex flex-col items-center justify-center">
                     <span className="text-3xl font-bold text-slate-800">{Math.round((present / total) * 100)}%</span>
-                    <span className="text-xs text-slate-500">Attendance</span>
+                    <span className="text-xs text-slate-500">{t('attendanceSimple')}</span>
                 </div>
             </div>
             <div className="flex gap-4 mt-6 text-sm">
-                <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-green-500"></span> Present ({present})</div>
-                <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-yellow-500"></span> Leave ({leave})</div>
-                <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-red-500"></span> Absent ({absent})</div>
+                <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-green-500"></span> {t('present')} ({present})</div>
+                <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-yellow-500"></span> {t('leave')} ({leave})</div>
+                <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-red-500"></span> {t('absent')} ({absent})</div>
             </div>
         </div>
     );
@@ -125,8 +126,26 @@ const AttendancePieChart = ({ meetings, t }: { meetings: Meeting[], t: any }) =>
 
 export default function ProgressClient({ data, locale }: Props) {
     const t = useTranslations('ProgressPage');
+    const tVote = useTranslations('VoteDetail');
     const [activeTab, setActiveTab] = useState<'policy' | 'council'>('policy');
     const [policyFilter, setPolicyFilter] = useState('all'); // all, central, Rangsit, Lampang, Tha Prachan
+
+    // Vote detail modal state
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedVote, setSelectedVote] = useState<any>(null);
+    const [selectedMeeting, setSelectedMeeting] = useState<Meeting | null>(null);
+
+    const handleOpenVoteDetail = (vote: any, meeting: Meeting) => {
+        setSelectedVote(vote);
+        setSelectedMeeting(meeting);
+        setIsModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+        setSelectedVote(null);
+        setSelectedMeeting(null);
+    };
 
     // Filter Policies
     const filteredPolicies = data.policies.filter(p => {
@@ -179,8 +198,8 @@ export default function ProgressClient({ data, locale }: Props) {
                                     key={f}
                                     onClick={() => setPolicyFilter(f)}
                                     className={`px-4 py-1.5 rounded-full text-xs font-medium border transition-colors ${policyFilter === f
-                                            ? 'bg-primary text-white border-primary'
-                                            : 'bg-white text-slate-600 border-slate-200 hover:border-primary/50'
+                                        ? 'bg-primary text-white border-primary'
+                                        : 'bg-white text-slate-600 border-slate-200 hover:border-primary/50'
                                         }`}
                                 >
                                     {f === 'central' ? t('filter.central') : f === 'all' ? t('filter.all') : t(`filter.${f}` as any) || f}
@@ -204,7 +223,7 @@ export default function ProgressClient({ data, locale }: Props) {
                                     </div>
                                     <h3 className="text-lg font-bold text-slate-900 mb-2">{policy.title}</h3>
                                     <p className="text-slate-500 text-sm mb-6 line-clamp-2">{policy.summary}</p>
-                                    <ProgressBar progress={policy.progress || 0} />
+                                    <ProgressBar progress={policy.progress || 0} label={t('progressSimple')} />
                                 </div>
                             ))}
                         </div>
@@ -243,12 +262,12 @@ export default function ProgressClient({ data, locale }: Props) {
                                             </div>
                                             <div>
                                                 <p className="text-sm font-medium text-slate-900">{motion.title}</p>
-                                                <p className="text-xs text-slate-500 mt-1">Proposed by {motion.proposer?.name}</p>
+                                                <p className="text-xs text-slate-500 mt-1">{t('proposedBy')} {motion.proposer?.name}</p>
                                             </div>
                                         </div>
                                     ))}
                                     {data.meetings.flatMap(m => m.motions || []).length === 0 && (
-                                        <p className="text-slate-400 text-sm text-center">No recent motions</p>
+                                        <p className="text-slate-400 text-sm text-center">{t('noMotions')}</p>
                                     )}
                                 </div>
                             </div>
@@ -287,10 +306,10 @@ export default function ProgressClient({ data, locale }: Props) {
                                 <table className="w-full text-sm text-left">
                                     <thead className="text-xs text-slate-500 uppercase bg-slate-50">
                                         <tr>
-                                            <th className="px-6 py-3">Topic</th>
-                                            <th className="px-6 py-3">Meeting</th>
-                                            <th className="px-6 py-3">Date</th>
-                                            <th className="px-6 py-3 text-right">Action</th>
+                                            <th className="px-6 py-3">{t('topic')}</th>
+                                            <th className="px-6 py-3">{t('meeting')}</th>
+                                            <th className="px-6 py-3">{t('date')}</th>
+                                            <th className="px-6 py-3 text-right">{t('action')}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -301,9 +320,12 @@ export default function ProgressClient({ data, locale }: Props) {
                                                     <td className="px-6 py-4 text-slate-500">{meeting.title}</td>
                                                     <td className="px-6 py-4 text-slate-500">{new Date(meeting.date).toLocaleDateString()}</td>
                                                     <td className="px-6 py-4 text-right">
-                                                        <Link href={"/candidates" as any} className="text-primary hover:text-blue-700 font-medium text-xs">
+                                                        <button
+                                                            onClick={() => handleOpenVoteDetail(vote, meeting)}
+                                                            className="text-primary hover:text-blue-700 font-medium text-xs"
+                                                        >
                                                             {t('viewProfile')}
-                                                        </Link>
+                                                        </button>
                                                     </td>
                                                 </tr>
                                             ))
@@ -316,6 +338,16 @@ export default function ProgressClient({ data, locale }: Props) {
                     </motion.div>
                 )}
             </AnimatePresence>
+
+            {/* Vote Detail Modal */}
+            <VoteDetailModal
+                isOpen={isModalOpen}
+                onClose={handleCloseModal}
+                vote={selectedVote}
+                meeting={selectedMeeting}
+                t={tVote}
+            />
         </div>
     );
 }
+

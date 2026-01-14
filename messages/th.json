@@ -57,6 +57,55 @@
         "motions": "การเสนอญัตติล่าสุด",
         "debates": "การอภิปรายที่น่าสนใจ",
         "votes": "การโหวตล่าสุด",
-        "viewProfile": "ดูประวัติการโหวต"
+        "viewProfile": "ดูประวัติการโหวต",
+        "progressSimple": "ความคืบหน้า",
+        "proposedBy": "เสนอโดย",
+        "attendanceSimple": "การเข้าประชุม",
+        "present": "เข้าประชุม",
+        "leave": "ลาประชุม",
+        "absent": "ขาดประชุม",
+        "topic": "ญัตติ",
+        "meeting": "การประชุม",
+        "date": "วันที่",
+        "action": "เมนู",
+        "noMotions": "ไม่มีญัตติล่าสุด"
+    },
+    "CandidateDetail": {
+        "aboutMe": "ประวัติผู้แทน",
+        "education": "การศึกษา",
+        "workExperience": "ประสบการณ์ทำงาน",
+        "achievements": "ความสำเร็จ",
+        "parliamentaryPerformance": "ผลการทำงานสภาฯ",
+        "attendanceRecord": "บันทึกการเข้าประชุม",
+        "missedMeetings": "ขาดประชุม",
+        "perfectAttendance": "(0 หมายถึงเข้าครบทุกครั้ง)",
+        "votingHistory": "ประวัติการลงคะแนน",
+        "socialMedia": "โซเชียลมีเดีย",
+        "campus": {
+            "LAMPANG": "ลำปาง",
+            "RANGSIT": "รังสิต",
+            "THA PRACHAN": "ท่าพระจันทร์"
+        },
+        "vote": {
+            "approve": "เห็นชอบ",
+            "disapprove": "ไม่เห็นชอบ",
+            "abstain": "งดออกเสียง",
+            "no_vote": "ไม่ลงคะแนน"
+        }
+    },
+    "VoteDetail": {
+        "title": "รายละเอียดการโหวต",
+        "attendees": "ผู้เข้าร่วมประชุม",
+        "presentMembers": "เข้าประชุม",
+        "leaveMembers": "ลาประชุม",
+        "absentMembers": "ขาดประชุม",
+        "voteResults": "ผลการลงคะแนนรายบุคคล",
+        "approve": "เห็นชอบ",
+        "disapprove": "ไม่เห็นชอบ",
+        "abstain": "งดออกเสียง",
+        "noVote": "ไม่แสดงตน",
+        "otherParties": "พรรคอื่น",
+        "close": "ปิด",
+        "voteSummary": "สรุปผลการลงคะแนน"
     }
 }
