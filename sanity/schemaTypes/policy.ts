@@ -33,6 +33,36 @@ export default defineType({
             name: 'content',
             title: 'Content',
             type: 'localeBlock',
+            description: 'Legacy content field (optional)',
+        }),
+        defineField({
+            name: 'tagline',
+            title: 'Tagline',
+            type: 'localeString',
+            description: 'Short impactful text displayed in Hero section',
+        }),
+        defineField({
+            name: 'heroImage',
+            title: 'Hero Image',
+            type: 'image',
+            options: {
+                hotspot: true,
+            },
+        }),
+        defineField({
+            name: 'whySection',
+            title: 'Why Section (ทำไมต้องแก้ปัญหา)',
+            type: 'localeBlock',
+        }),
+        defineField({
+            name: 'whatSection',
+            title: 'What Section (เราจะทำอะไร)',
+            type: 'localeBlock',
+        }),
+        defineField({
+            name: 'howSection',
+            title: 'How Section (ทำอย่างไรให้สำเร็จ)',
+            type: 'localeBlock',
         }),
         defineField({
             name: 'iconName',

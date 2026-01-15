@@ -37,8 +37,15 @@ export interface Policy {
   title: string;
   category: string;
   summary: string;
-  content: string; // HTML content
+  content: string | any[]; // HTML content or Portable Text
   iconName: string; // Lucide icon name
+  whySection?: any[];
+  whatSection?: any[];
+  howSection?: any[];
+  heroImage?: any;
+  tagline?: string;
+  campus?: string;
+  policyType?: string;
 }
 
 export const POLICIES: Policy[] = [

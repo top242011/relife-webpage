@@ -88,6 +88,31 @@ export const siteContent = defineType({
             group: 'homepage',
         }),
         defineField({
+            name: 'heroMedia',
+            title: 'Hero Background Image',
+            type: 'image',
+            description: 'Background image for hero section (optional). If not set, animated gradient will be used.',
+            options: {
+                hotspot: true,
+            },
+            group: 'homepage',
+        }),
+        defineField({
+            name: 'heroMediaAlt',
+            title: 'Hero Media Alt Text',
+            type: 'localeString',
+            description: 'Accessibility text for the hero image',
+            group: 'homepage',
+        }),
+        defineField({
+            name: 'enableParallax',
+            title: 'Enable Parallax Effect',
+            type: 'boolean',
+            description: 'Enable parallax scrolling effect on hero image',
+            initialValue: true,
+            group: 'homepage',
+        }),
+        defineField({
             name: 'marqueeKeywords',
             title: 'Marquee Keywords',
             type: 'array',

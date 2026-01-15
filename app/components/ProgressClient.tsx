@@ -215,9 +215,15 @@ export default function ProgressClient({ data, locale }: Props) {
                                         <span className="text-xs font-bold text-primary bg-primary/5 px-2 py-1 rounded">
                                             {policy.category}
                                         </span>
-                                        {policy.policyType === 'center' && (
-                                            <span className="text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full">
-                                                {policy.campus}
+                                        {(policy.policyType === 'central' || policy.policyType === 'center' || policy.campus) && (
+                                            <span className="text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full flex items-center gap-1 border border-slate-200">
+                                                <span className="w-1 h-1 rounded-full bg-slate-400"></span>
+                                                {policy.policyType === 'central' || policy.policyType === 'center'
+                                                    ? "ส่วนกลาง"
+                                                    : (policy.campus === "Rangsit" ? "รังสิต"
+                                                        : policy.campus === "Lampang" ? "ลำปาง"
+                                                            : policy.campus === "Tha Prachan" ? "ท่าพระจันทร์"
+                                                                : policy.campus)}
                                             </span>
                                         )}
                                     </div>

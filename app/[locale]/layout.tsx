@@ -2,14 +2,8 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "../globals.css";
 import Navbar from "../components/Navbar";
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-});
 
 export const metadata: Metadata = {
   title: "Relife - New Life for Thammasat",
@@ -37,10 +31,10 @@ export default async function RootLayout({
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
       </head>
       <body
-        className={`${inter.variable} font-sans antialiased text-slate-900 bg-white`}
+        className="font-sans antialiased text-slate-900 bg-white"
       >
         <NextIntlClientProvider messages={messages}>
           <div className="flex min-h-screen flex-col">

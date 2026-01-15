@@ -2,21 +2,28 @@ import { defineQuery } from "next-sanity";
 
 export const POLICIES_QUERY = defineQuery(`*[_type == "policy"]{
   _id,
-  "title": title[$lang],
+  "title": coalesce(title[$lang], title.th, "Untitled"),
   "slug": slug.current,
-  "category": category[$lang],
-  "summary": summary[$lang],
+  "category": coalesce(category[$lang], category.th, "General"),
+  "summary": coalesce(summary[$lang], summary.th, ""),
   content,
-  iconName
+  iconName,
+  campus,
+  policyType
 }`);
 
-export const POLICY_BY_SLUG_QUERY = defineQuery(`*[_type == "policy" && slug.current == $slug][0]{
+export const POLICY_BY_SLUG_QUERY = defineQuery(`*[_type == "policy" && (slug.current == $slug || _id == $slug)][0]{
   _id,
-  "title": title[$lang],
+  "title": coalesce(title[$lang], title.th, "Untitled"),
   "slug": slug.current,
-  "category": category[$lang],
-  "summary": summary[$lang],
+  "category": coalesce(category[$lang], category.th, "General"),
+  "summary": coalesce(summary[$lang], summary.th, ""),
   "content": content[$lang],
+  "tagline": coalesce(tagline[$lang], tagline.th, ""),
+  heroImage,
+  "whySection": whySection[$lang],
+  "whatSection": whatSection[$lang],
+  "howSection": howSection[$lang],
   iconName
 }`);
 
@@ -66,6 +73,9 @@ export const SITE_CONTENT_QUERY = defineQuery(`*[_type == "siteContent"][0]{
   "heroSubtitle": heroSubtitle[$lang],
   "ctaLearnMore": ctaLearnMore[$lang],
   "ctaMeetTeam": ctaMeetTeam[$lang],
+  "heroMedia": heroMedia,
+  "heroMediaAlt": heroMediaAlt[$lang],
+  "enableParallax": enableParallax,
   "marqueeKeywords": marqueeKeywords[][$lang],
   "features": features[]{
     "title": title[$lang],
