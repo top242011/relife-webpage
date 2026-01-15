@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import { Candidate } from "@/app/lib/cms-data";
 import { urlFor } from "@/sanity/lib/image";
 import { User } from "lucide-react";
-import ImageLightbox from "./ImageLightbox";
+
 
 interface CandidateCardProps {
     candidate: Candidate | any;
@@ -21,7 +21,7 @@ const CAMPUS_LABELS: Record<string, string> = {
 };
 
 export default function CandidateCard({ candidate }: CandidateCardProps) {
-    const [isLightboxOpen, setIsLightboxOpen] = React.useState(false);
+
 
     // Determine image source: Sanity object or local path
     const imgSrc = candidate.image?.asset
@@ -34,11 +34,7 @@ export default function CandidateCard({ candidate }: CandidateCardProps) {
     // Check if member is active (default to true if not set)
     const isActive = candidate.isActive !== false;
 
-    const handleImageClick = (e: React.MouseEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-        if (imgSrc) setIsLightboxOpen(true);
-    };
+
 
     return (
         <>
@@ -56,8 +52,7 @@ export default function CandidateCard({ candidate }: CandidateCardProps) {
 
                     {/* Image */}
                     <div
-                        className="relative aspect-[4/5] bg-gray-100 overflow-hidden cursor-pointer"
-                        onClick={handleImageClick}
+                        className="relative aspect-[4/5] bg-gray-100 overflow-hidden"
                     >
                         {imgSrc ? (
                             <Image
@@ -77,14 +72,7 @@ export default function CandidateCard({ candidate }: CandidateCardProps) {
                         {/* Overlay gradient */}
                         <div className={`absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/20 to-transparent transition-opacity duration-300 ${isActive ? 'opacity-60 group-hover:opacity-40' : 'opacity-70'}`} />
 
-                        {/* Zoom hint icon (optional, appears on hover) */}
-                        {imgSrc && (
-                            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-                                <div className="bg-black/30 backdrop-blur-sm p-3 rounded-full text-white">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m21 21-4.3-4.3" /><path d="M11 8a3 3 0 0 0-3 3" /><circle cx="11" cy="11" r="8" /></svg>
-                                </div>
-                            </div>
-                        )}
+
                     </div>
 
                     {/* Content */}
@@ -105,14 +93,7 @@ export default function CandidateCard({ candidate }: CandidateCardProps) {
                 </motion.div>
             </Link>
 
-            {imgSrc && (
-                <ImageLightbox
-                    isOpen={isLightboxOpen}
-                    onClose={() => setIsLightboxOpen(false)}
-                    imageUrl={imgSrc}
-                    alt={candidate.name}
-                />
-            )}
+
         </>
     );
 }
