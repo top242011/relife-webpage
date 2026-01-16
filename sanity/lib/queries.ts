@@ -8,7 +8,8 @@ export const POLICIES_QUERY = defineQuery(`*[_type == "policy"]{
   "summary": coalesce(summary[$lang], summary.th, ""),
   content,
   iconName,
-  heroImage,
+  "heroImageWide": coalesce(heroImageWide, heroImage),
+  "heroImageTall": coalesce(heroImageTall, heroImage),
   campus,
   policyType
 }`);
@@ -21,7 +22,7 @@ export const POLICY_BY_SLUG_QUERY = defineQuery(`*[_type == "policy" && (slug.cu
   "summary": coalesce(summary[$lang], summary.th, ""),
   "content": content[$lang],
   "tagline": coalesce(tagline[$lang], tagline.th, ""),
-  heroImage,
+  "heroImageWide": coalesce(heroImageWide, heroImage),
   "whySection": whySection[$lang],
   "whatSection": whatSection[$lang],
   "howSection": howSection[$lang],

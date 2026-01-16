@@ -23,7 +23,7 @@ const iconMap: Record<string, any> = {
 
 export default function PolicyCard({ policy }: PolicyCardProps) {
     const Icon = policy.iconName ? (iconMap[policy.iconName] || BookOpen) : BookOpen;
-    const hasImage = policy.heroImage;
+    const hasImage = policy.heroImageWide;
 
     return (
         <Link href={`/policy/${policy.slug || policy._id || policy.id}`} className="block">
@@ -37,7 +37,7 @@ export default function PolicyCard({ policy }: PolicyCardProps) {
                 <div className="relative h-40 bg-gradient-to-br from-primary/80 to-primary overflow-hidden">
                     {hasImage ? (
                         <img
-                            src={urlFor(policy.heroImage).width(400).height(200).url()}
+                            src={urlFor(policy.heroImageWide).width(640).height(360).url()}
                             alt={policy.title}
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         />

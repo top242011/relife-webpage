@@ -43,8 +43,28 @@ export default defineType({
         }),
         defineField({
             name: 'heroImage',
-            title: 'Hero Image',
+            title: 'Hero Image (Legacy)',
             type: 'image',
+            description: '⚠️ ไม่ใช้แล้ว - ใช้ภาพด้านล่างแทน',
+            options: {
+                hotspot: true,
+            },
+            hidden: true,
+        }),
+        defineField({
+            name: 'heroImageWide',
+            title: 'Hero Image - หน้านโยบาย (16:9)',
+            type: 'image',
+            description: 'ภาพสำหรับแสดงในหน้านโยบาย (Policy Card) แนะนำขนาด 1920x1080 หรืออัตราส่วน 16:9',
+            options: {
+                hotspot: true,
+            },
+        }),
+        defineField({
+            name: 'heroImageTall',
+            title: 'Hero Image - หน้าแรก Marquee (9:16)',
+            type: 'image',
+            description: 'ภาพสำหรับแสดงใน Marquee หน้าแรก แนะนำขนาด 1080x1920 หรืออัตราส่วน 9:16',
             options: {
                 hotspot: true,
             },

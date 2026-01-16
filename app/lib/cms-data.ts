@@ -43,6 +43,8 @@ export interface Policy {
   whatSection?: any[];
   howSection?: any[];
   heroImage?: any;
+  heroImageWide?: any;
+  heroImageTall?: any;
   tagline?: string;
   campus?: string;
   policyType?: string;

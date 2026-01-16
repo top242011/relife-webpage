@@ -29,14 +29,14 @@ export default function PolicyMarquee({ policies, direction = "left", speed = 40
 
     const MarqueeCard = ({ policy }: { policy: Policy }) => {
         const Icon = policy.iconName ? (iconMap[policy.iconName] || BookOpen) : BookOpen;
-        const hasImage = policy.heroImage;
+        const hasImage = policy.heroImageTall;
 
         return (
             <Link href={`/policy/${policy.slug || policy._id || policy.id}`} className="block relative w-[280px] h-[340px] md:w-[320px] md:h-[380px] rounded-2xl overflow-hidden group">
                 {/* Background Image */}
                 {hasImage ? (
                     <img
-                        src={urlFor(policy.heroImage).width(400).height(400).url()}
+                        src={urlFor(policy.heroImageTall).width(360).height(640).url()}
                         alt={policy.title}
                         className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     />
