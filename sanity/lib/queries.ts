@@ -8,6 +8,7 @@ export const POLICIES_QUERY = defineQuery(`*[_type == "policy"]{
   "summary": coalesce(summary[$lang], summary.th, ""),
   content,
   iconName,
+  heroImage,
   campus,
   policyType
 }`);
